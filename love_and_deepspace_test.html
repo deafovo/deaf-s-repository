@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恋与深空 - 天命男主性格测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #2a1a4a 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, rgba(147, 112, 219, 0.15) 0%, transparent 100%);
+            border-bottom: 2px solid rgba(147, 112, 219, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #9370db;
+            text-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #a0a0a0;
+        }
+
+        .intro-screen, .result-screen {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .intro-screen h2, .result-screen h2 {
+            color: #9370db;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .intro-screen p {
+            margin-bottom: 15px;
+            color: #c0c0c0;
+        }
+
+        .characters-intro {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .character-badge {
+            background: rgba(147, 112, 219, 0.1);
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #9370db;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #9370db 0%, #ba55d3 100%);
+            color: #fff;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(147, 112, 219, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(147, 112, 219, 0.6);
+        }
+
+        .btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .question-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            color: #9370db;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(147, 112, 219, 0.1);
+            border-color: rgba(147, 112, 219, 0.5);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: rgba(147, 112, 219, 0.2);
+            border-color: #9370db;
+        }
+
+        .option-letter {
+            width: 35px;
+            height: 35px;
+            background: rgba(147, 112, 219, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9370db;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: #9370db;
+            color: #fff;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #9370db, #ba55d3);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .result-screen {
+            display: none;
+        }
+
+        .result-screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .match-result {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .matched-character {
+            font-size: 2.5em;
+            color: #9370db;
+            margin: 20px 0;
+            text-shadow: 0 0 30px rgba(147, 112, 219, 0.5);
+        }
+
+        .character-image {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(147, 112, 219, 0.2), rgba(147, 112, 219, 0.05));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            border: 3px solid rgba(147, 112, 219, 0.5);
+        }
+
+        .character-desc {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .character-desc h3 {
+            color: #9370db;
+            margin-bottom: 15px;
+        }
+
+        .character-desc p {
+            color: #b0b0b0;
+            margin-bottom: 10px;
+        }
+
+        .compatibility-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .compatibility-fill {
+            background: linear-gradient(90deg, #9370db, #ba55d3);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .compatibility-text {
+            color: #9370db;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .secondary-matches {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .secondary-matches h3 {
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .scrollable-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .scrollable-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background: rgba(147, 112, 219, 0.3);
+            border-radius: 10px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(147, 112, 219, 0.5);
+        }
+        
+        .secondary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-item:hover {
+            background: rgba(147, 112, 219, 0.05);
+            transform: translateX(5px);
+        }
+
+        .secondary-name {
+            color: #fff;
+        }
+
+        .secondary-percent {
+            color: #9370db;
+            font-weight: bold;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .nav-btn:hover {
+            background: rgba(147, 112, 219, 0.2);
+            border-color: rgba(147, 112, 219, 0.5);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #ba55d3;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(147, 112, 219, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .question-text {
+                font-size: 1.1em;
+            }
+            .matched-character {
+                font-size: 1.8em;
+            }
+            .intro-screen, .result-screen {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>恋与深空</h1>
+            <p>天命男主性格测试</p>
+        </header>
+
+        <div class="intro-screen" id="introScreen">
+            <h2>遇见你的天命男主</h2>
+            <p>本测试包含 <strong>50道</strong> 性格测试题，通过测试结果将为你匹配最适合你的《恋与深空》男主。</p>
+            <p>测试将评估你的性格特点、情感倾向和生活态度，包括：</p>
+            <ul style="margin: 15px 0 15px 30px; color: #b0b0b0;">
+                <li>情感模式（守护 vs 自由 vs 依赖）</li>
+                <li>性格特质（温柔 vs 热情 vs 神秘）</li>
+                <li>生活态度（平淡 vs 浪漫 vs 冒险）</li>
+                <li>价值观（自由 vs 责任 vs 爱情）</li>
+            </ul>
+            <p style="margin-top: 20px; color: #888; font-size: 0.9em;">
+                五位男主：沈星回 ⭐ | 黎深 ❄️ | 祁煜 🔥 | 秦彻 🌑 | 夏以昼 🌌
+            </p>
+            <div class="characters-intro">
+                <div class="character-badge">沈星回 ⭐</div>
+                <div class="character-badge">黎深 ❄️</div>
+                <div class="character-badge">祁煜 🔥</div>
+                <div class="character-badge">秦彻 🌑</div>
+                <div class="character-badge">夏以昼 🌌</div>
+            </div>
+            <button class="btn" onclick="startTest()">开始测试</button>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">题目 1 / 50</div>
+            
+            <div class="question-card" id="questionCard">
+                <div class="question-number" id="questionNumber">问题 1</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" id="prevBtn" onclick="prevQuestion()" disabled>上一题</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">下一题</button>
+            </div>
+        </div>
+
+        <div class="result-screen" id="resultScreen">
+            <h2>测试结果</h2>
+            <div class="match-result">
+                <div class="character-image" id="resultIcon"></div>
+                <div class="matched-character" id="matchedCharacter"></div>
+                <div class="compatibility-text" id="compatibilityText"></div>
+                <div class="compatibility-bar">
+                    <div class="compatibility-fill" id="compatibilityFill"></div>
+                </div>
+            </div>
+            
+            <div class="character-desc">
+                <h3>人物介绍</h3>
+                <p id="characterDesc"></p>
+                <p id="characterPersonality"></p>
+                <p class="quote" id="characterQuote"></p>
+            </div>
+
+            <div class="secondary-matches">
+                <h3>所有男主适配度</h3>
+                <div id="secondaryMatches" class="scrollable-list"></div>
+            </div>
+
+            <button class="btn" onclick="restartTest()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        var characters = {
+            shenXinghui: {
+                name: "沈星回",
+                icon: "⭐",
+                coreTag: "光之王子",
+                keyTraits: "反差萌、天然呆、隐藏dom",
+                relationship: "忠犬守护、战力天花板",
+                desc: "菲罗斯星王子、王的继承人，首席圣剑骑士。表面天然呆、慢半拍、温柔安静，实际战力天花板、占有欲强。佛系淡然、低调疏离、淡泊名利，追逐自由、悲悯生命。",
+                personality: "他是你的光，永远只朝向你在的地方。在感情中占有欲强但控制欲为零，是值得依靠的忠犬守护型伴侣。",
+                quote: "\"我的光芒，只朝向你在的地方。\"",
+                traits: { light: 0, ice: 0, fire: 0, dark: 0, gravity: 0 }
+            },
+            liShen: {
+                name: "黎深",
+                icon: "❄️",
+                coreTag: "冰之医生",
+                keyTraits: "外冷内热、禁欲系、专业",
+                relationship: "青梅竹马、主治医师",
+                desc: "菲罗斯星永恒先知，临空中心医院心脏外科主任医师。史上最年轻的'摘星医学奖'得主。表面冰冷严肃，内心孤独而天真，专业严谨、成熟可靠。",
+                personality: "他是外冷内热的冰山医生，对时间把控严格的工作狂，实际上很温暖细腻，会为患者小朋友夹娃娃，用Evol捏雪海豹安慰你。",
+                quote: "\"从现在起，你的心跳归我保管。\"",
+                traits: { light: 0, ice: 0, fire: 0, dark: 0, gravity: 0 }
+            },
+            qiYu: {
+                name: "祁煜",
+                icon: "🔥",
+                coreTag: "火之画家",
+                keyTraits: "古灵精怪、话痨、艺术家",
+                relationship: "热情浪漫、海洋羁绊",
+                desc: "海洋文明'利莫里亚'的最后一任海神，天才画家，Mo Art Studio工作室创始人。古灵精怪、自我任性、行为乖张，避世疏离但在你面前温柔如邻家男孩。",
+                personality: "他是热情似火又追求内心纯真宁静的艺术家，会耍帅也会耍坏，有点小坏，绘画时细致入微，日常生活随心所欲。",
+                quote: "\"你相信，海底也会燃起火焰吗？\"",
+                traits: { light: 0, ice: 0, fire: 0, dark: 0, gravity: 0 }
+            },
+            qinChe: {
+                name: "秦彻",
+                icon: "🌑",
+                coreTag: "暗之首领",
+                keyTraits: "危险迷人、野性、神秘",
+                relationship: "势均力敌、欲望牵引",
+                desc: "菲罗斯星有史以来悬赏金额最高的罪犯，N109区暗点组织首领。危险而迷人，深沉复杂、果敢果断，冷静且充满力量，放荡不羁、野性十足。",
+                personality: "他是气场强大、充满神秘感的'Daddy系'成熟魅力型，对自己够狠，能自愈，是让你又爱又怕的危险存在。",
+                quote: "\"看清楚了么？这才是你内心真正的欲望。\"",
+                traits: { light: 0, ice: 0, fire: 0, dark: 0, gravity: 0 }
+            },
+            xiaYizhou: {
+                name: "夏以昼",
+                icon: "🌌",
+                coreTag: "引力飞行员",
+                keyTraits: "宠溺温柔、禁忌感",
+                relationship: "伪骨科、无血缘兄妹",
+                desc: "DAA战斗机飞行员，远空舰队执舰官，Evol是引力控制。与你是没有血缘关系的兄妹，宠溺女主，温柔深情，引力的起点和终点都是你。",
+                personality: "他在家庭关系束缚下，喜欢难以直接表达，充满禁忌魅力的情感冲突，是默默守护你的温柔哥哥。",
+                quote: "\"引力的起点是你，终点也是你。\"",
+                traits: { light: 0, ice: 0, fire: 0, dark: 0, gravity: 0 }
+            }
+        };
+
+        var questions = [
+            {
+                text: "周末的午后，你更喜欢？",
+                options: [
+                    { text: "安静地在家看书、睡觉", traits: { light: 3, ice: 1 } },
+                    { text: "和朋友一起出去探险", traits: { fire: 3, dark: 1 } },
+                    { text: "去艺术馆或博物馆", traits: { fire: 2, gravity: 1 } },
+                    { text: "在家研究自己喜欢的东西", traits: { ice: 3, light: 1 } },
+                    { text: "和家人一起做饭聊天", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "在感情中，你更看重？",
+                options: [
+                    { text: "对方能给你安全感", traits: { light: 3, gravity: 2 } },
+                    { text: "对方的专业能力和成熟稳重", traits: { ice: 3, dark: 1 } },
+                    { text: "浪漫和充满激情的体验", traits: { fire: 3, dark: 1 } },
+                    { text: "对方能带你成长和挑战", traits: { dark: 3, fire: 1 } },
+                    { text: "长久陪伴和细水长流", traits: { gravity: 3, ice: 1 } }
+                ]
+            },
+            {
+                text: "面对困难时，你通常会？",
+                options: [
+                    { text: "自己默默承受，不想麻烦别人", traits: { ice: 3, light: 1 } },
+                    { text: "找最信任的人倾诉", traits: { gravity: 3, light: 2 } },
+                    { text: "用自己的方式发泄情绪", traits: { fire: 3, dark: 1 } },
+                    { text: "冷静分析，寻找解决办法", traits: { ice: 3, dark: 1 } },
+                    { text: "相信时间会解决一切", traits: { light: 3, gravity: 1 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种天气？",
+                options: [
+                    { text: "晴朗的星空夜晚", traits: { light: 3, gravity: 1 } },
+                    { text: "下雪的冬日", traits: { ice: 3, light: 1 } },
+                    { text: "日落时分的海边", traits: { fire: 3, gravity: 1 } },
+                    { text: "雷雨交加的夜晚", traits: { dark: 3, fire: 1 } },
+                    { text: "温和的春日午后", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "在朋友聚会中，你通常是？",
+                options: [
+                    { text: "安静倾听的那个人", traits: { light: 3, ice: 1 } },
+                    { text: "带动气氛的活跃分子", traits: { fire: 3, dark: 1 } },
+                    { text: "默默照顾大家的人", traits: { gravity: 3, light: 1 } },
+                    { text: "偶尔发表深刻见解", traits: { dark: 3, ice: 1 } },
+                    { text: "和几个好友单独聊天", traits: { ice: 2, gravity: 2 } }
+                ]
+            },
+            {
+                text: "你对未来的期望是？",
+                options: [
+                    { text: "平淡幸福的生活", traits: { light: 3, gravity: 2 } },
+                    { text: "实现自己的职业理想", traits: { ice: 3, dark: 1 } },
+                    { text: "充满冒险和惊喜的人生", traits: { fire: 3, dark: 1 } },
+                    { text: "成为更强大的自己", traits: { dark: 3, fire: 1 } },
+                    { text: "和爱的人在一起就好", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种类型的电影？",
+                options: [
+                    { text: "温馨治愈的文艺片", traits: { light: 3, gravity: 1 } },
+                    { text: "悬疑烧脑的推理片", traits: { ice: 3, dark: 1 } },
+                    { text: "浪漫唯美的爱情片", traits: { fire: 3, light: 1 } },
+                    { text: "惊险刺激的动作片", traits: { dark: 3, fire: 1 } },
+                    { text: "温馨感人的家庭片", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "当你喜欢一个人时，你会？",
+                options: [
+                    { text: "默默守护，等待时机", traits: { light: 3, gravity: 1 } },
+                    { text: "用实际行动证明自己", traits: { ice: 3, light: 1 } },
+                    { text: "制造浪漫和惊喜", traits: { fire: 3, dark: 1 } },
+                    { text: "直接而霸道地表达", traits: { dark: 3, fire: 1 } },
+                    { text: "像家人一样照顾对方", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你更看重对方的什么特质？",
+                options: [
+                    { text: "温柔和耐心", traits: { light: 3, gravity: 1 } },
+                    { text: "专业和可靠", traits: { ice: 3, light: 1 } },
+                    { text: "热情和浪漫", traits: { fire: 3, light: 1 } },
+                    { text: "神秘和魅力", traits: { dark: 3, fire: 1 } },
+                    { text: "责任感和担当", traits: { gravity: 3, ice: 1 } }
+                ]
+            },
+            {
+                text: "你理想中的约会地点是？",
+                options: [
+                    { text: "安静的公园或湖边", traits: { light: 3, gravity: 1 } },
+                    { text: "高端餐厅或音乐厅", traits: { ice: 3, light: 1 } },
+                    { text: "海边或艺术展览", traits: { fire: 3, dark: 1 } },
+                    { text: "刺激的游乐场或冒险", traits: { dark: 3, fire: 1 } },
+                    { text: "在家一起做饭看电影", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "面对压力时，你会选择？",
+                options: [
+                    { text: "独处，让自己冷静", traits: { ice: 3, light: 1 } },
+                    { text: "找信任的人陪伴", traits: { gravity: 3, light: 2 } },
+                    { text: "做自己喜欢的事转移注意力", traits: { fire: 3, light: 1 } },
+                    { text: "直面问题，解决它", traits: { dark: 3, ice: 1 } },
+                    { text: "运动或发泄情绪", traits: { fire: 2, dark: 2 } }
+                ]
+            },
+            {
+                text: "你对金钱的看法是？",
+                options: [
+                    { text: "够用就好，不重要", traits: { light: 3, gravity: 1 } },
+                    { text: "是实现目标的工具", traits: { ice: 3, dark: 1 } },
+                    { text: "可以用来创造美好体验", traits: { fire: 3, light: 1 } },
+                    { text: "是力量和自由的象征", traits: { dark: 3, fire: 1 } },
+                    { text: "是给家人更好生活的保障", traits: { gravity: 3, ice: 1 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种颜色？",
+                options: [
+                    { text: "紫色或星空蓝", traits: { light: 3, gravity: 1 } },
+                    { text: "白色或浅蓝色", traits: { ice: 3, light: 1 } },
+                    { text: "红色或橙色", traits: { fire: 3, dark: 1 } },
+                    { text: "黑色或深紫色", traits: { dark: 3, ice: 1 } },
+                    { text: "温暖的米色或金色", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "在团队中，你更倾向于？",
+                options: [
+                    { text: "默默支持大家的人", traits: { light: 3, gravity: 1 } },
+                    { text: "提供专业意见的人", traits: { ice: 3, dark: 1 } },
+                    { text: "带来创意和灵感的人", traits: { fire: 3, light: 1 } },
+                    { text: "做最终决定的领导者", traits: { dark: 3, fire: 1 } },
+                    { text: "协调各方的润滑剂", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你对冒险的态度是？",
+                options: [
+                    { text: "更喜欢安稳的生活", traits: { light: 3, gravity: 1 } },
+                    { text: "有计划的冒险可以接受", traits: { ice: 3, dark: 1 } },
+                    { text: "热爱冒险，追求刺激", traits: { fire: 3, dark: 1 } },
+                    { text: "冒险是成长的必经之路", traits: { dark: 3, fire: 1 } },
+                    { text: "和爱的人一起就可以", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你理想中的家是什么样的？",
+                options: [
+                    { text: "温馨舒适的小窝", traits: { light: 3, gravity: 2 } },
+                    { text: "简约现代的风格", traits: { ice: 3, light: 1 } },
+                    { text: "充满艺术感的空间", traits: { fire: 3, dark: 1 } },
+                    { text: "有安全感的私密空间", traits: { dark: 3, ice: 1 } },
+                    { text: "能容纳家人的大房子", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "当别人需要帮助时，你会？",
+                options: [
+                    { text: "毫不犹豫地伸出援手", traits: { light: 3, gravity: 1 } },
+                    { text: "根据情况提供专业帮助", traits: { ice: 3, light: 1 } },
+                    { text: "用自己的方式让对方开心", traits: { fire: 3, light: 1 } },
+                    { text: "教会对方如何自己解决", traits: { dark: 3, ice: 1 } },
+                    { text: "像家人一样陪伴对方", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对承诺的看法是？",
+                options: [
+                    { text: "一旦承诺就会坚守", traits: { light: 3, gravity: 2 } },
+                    { text: "承诺是需要用行动证明的", traits: { ice: 3, dark: 1 } },
+                    { text: "承诺要浪漫也要真诚", traits: { fire: 3, light: 1 } },
+                    { text: "不轻易承诺，但承诺了就做到", traits: { dark: 3, ice: 1 } },
+                    { text: "承诺是给对方的安全感", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种动物？",
+                options: [
+                    { text: "猫 - 独立又温柔", traits: { light: 3, ice: 1 } },
+                    { text: "雪豹 - 高冷又优雅", traits: { ice: 3, dark: 1 } },
+                    { text: "海豚 - 聪明又友善", traits: { fire: 3, light: 1 } },
+                    { text: "狼 - 野性又忠诚", traits: { dark: 3, fire: 1 } },
+                    { text: "狗 - 温暖又忠诚", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对时间的态度是？",
+                options: [
+                    { text: "顺其自然，活在当下", traits: { light: 3, fire: 1 } },
+                    { text: "时间宝贵，要充分利用", traits: { ice: 3, dark: 1 } },
+                    { text: "时间用来创造美好回忆", traits: { fire: 3, light: 1 } },
+                    { text: "时间会证明一切", traits: { dark: 3, ice: 1 } },
+                    { text: "时间要和重要的人一起度过", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你理想中的旅行是？",
+                options: [
+                    { text: "探索自然，看星空银河", traits: { light: 3, gravity: 1 } },
+                    { text: "文化之旅，参观博物馆", traits: { ice: 3, light: 1 } },
+                    { text: "海边度假，享受阳光", traits: { fire: 3, dark: 1 } },
+                    { text: "冒险之旅，挑战自我", traits: { dark: 3, fire: 1 } },
+                    { text: "和家人一起的温馨旅行", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对谎言的态度是？",
+                options: [
+                    { text: "无法接受任何谎言", traits: { light: 3, gravity: 1 } },
+                    { text: "要看谎言的目的是什么", traits: { ice: 3, dark: 1 } },
+                    { text: "善意的谎言可以理解", traits: { fire: 2, light: 2 } },
+                    { text: "谎言是保护自己的手段", traits: { dark: 3, ice: 1 } },
+                    { text: "对重要的人不能说谎", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种音乐？",
+                options: [
+                    { text: "古典音乐或轻音乐", traits: { light: 3, ice: 1 } },
+                    { text: "钢琴曲或交响乐", traits: { ice: 3, light: 1 } },
+                    { text: "浪漫的流行歌曲", traits: { fire: 3, light: 1 } },
+                    { text: "有力量感的摇滚乐", traits: { dark: 3, fire: 1 } },
+                    { text: "温馨的家庭音乐", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "在感情中遇到矛盾时，你会？",
+                options: [
+                    { text: "先冷静下来，再沟通", traits: { light: 3, gravity: 1 } },
+                    { text: "理性分析问题，寻找解决方案", traits: { ice: 3, dark: 1 } },
+                    { text: "用浪漫和温柔化解", traits: { fire: 3, light: 1 } },
+                    { text: "直接面对，不逃避", traits: { dark: 3, fire: 1 } },
+                    { text: "主动妥协，维护感情", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对自由的看法是？",
+                options: [
+                    { text: "自由是最重要的", traits: { light: 3, fire: 1 } },
+                    { text: "自由需要责任来平衡", traits: { ice: 3, gravity: 1 } },
+                    { text: "和爱的人在一起就是自由", traits: { fire: 3, gravity: 1 } },
+                    { text: "自由需要力量来守护", traits: { dark: 3, fire: 1 } },
+                    { text: "家人的幸福比自由重要", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你理想中的早餐是？",
+                options: [
+                    { text: "简单的面包和咖啡", traits: { light: 3, ice: 1 } },
+                    { text: "营养均衡的健康早餐", traits: { ice: 3, gravity: 1 } },
+                    { text: "精致的法式早餐", traits: { fire: 3, light: 1 } },
+                    { text: "丰盛的美式早餐", traits: { dark: 2, fire: 2 } },
+                    { text: "和家人一起做的早餐", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对成功的定义是？",
+                options: [
+                    { text: "内心的平静和满足", traits: { light: 3, gravity: 1 } },
+                    { text: "实现自己的职业目标", traits: { ice: 3, dark: 1 } },
+                    { text: "有丰富的人生体验", traits: { fire: 3, dark: 1 } },
+                    { text: "成为自己想成为的人", traits: { dark: 3, fire: 1 } },
+                    { text: "让家人过上好生活", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种礼物？",
+                options: [
+                    { text: "对方亲手做的小东西", traits: { light: 3, gravity: 1 } },
+                    { text: "实用又有品质的东西", traits: { ice: 3, dark: 1 } },
+                    { text: "浪漫的鲜花或首饰", traits: { fire: 3, light: 1 } },
+                    { text: "独特又有意义的东西", traits: { dark: 3, fire: 1 } },
+                    { text: "能让家人开心的东西", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对过去的态度是？",
+                options: [
+                    { text: "怀念但不沉溺", traits: { light: 3, gravity: 1 } },
+                    { text: "从中学习，不断成长", traits: { ice: 3, dark: 1 } },
+                    { text: "珍藏美好的回忆", traits: { fire: 3, light: 1 } },
+                    { text: "过去造就了现在的我", traits: { dark: 3, ice: 1 } },
+                    { text: "更看重现在和未来", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你理想中的婚礼是？",
+                options: [
+                    { text: "简单温馨的小型婚礼", traits: { light: 3, gravity: 2 } },
+                    { text: "庄重正式的传统婚礼", traits: { ice: 3, dark: 1 } },
+                    { text: "浪漫唯美的海边婚礼", traits: { fire: 3, dark: 1 } },
+                    { text: "独特而有个性的婚礼", traits: { dark: 3, fire: 1 } },
+                    { text: "有所有家人祝福的婚礼", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对友谊的看法是？",
+                options: [
+                    { text: "君子之交淡如水", traits: { light: 3, ice: 1 } },
+                    { text: "志同道合，互相成长", traits: { ice: 3, dark: 1 } },
+                    { text: "一起疯一起玩的伙伴", traits: { fire: 3, light: 1 } },
+                    { text: "在关键时刻能依靠的人", traits: { dark: 3, gravity: 1 } },
+                    { text: "像家人一样的存在", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种运动？",
+                options: [
+                    { text: "瑜伽或冥想", traits: { light: 3, ice: 1 } },
+                    { text: "游泳或跑步", traits: { ice: 3, fire: 1 } },
+                    { text: "跳舞或冲浪", traits: { fire: 3, dark: 1 } },
+                    { text: "拳击或极限运动", traits: { dark: 3, fire: 1 } },
+                    { text: "和家人一起散步", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对爱情的理解是？",
+                options: [
+                    { text: "相互陪伴，细水长流", traits: { light: 3, gravity: 2 } },
+                    { text: "相互成就，共同成长", traits: { ice: 3, dark: 1 } },
+                    { text: "激情浪漫，刻骨铭心", traits: { fire: 3, dark: 1 } },
+                    { text: "灵魂契合，势均力敌", traits: { dark: 3, fire: 1 } },
+                    { text: "像家人一样的爱", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对年龄的看法是？",
+                options: [
+                    { text: "只是个数字，不重要", traits: { light: 3, fire: 1 } },
+                    { text: "意味着更多的责任和智慧", traits: { ice: 3, gravity: 1 } },
+                    { text: "每个年龄都有独特的美", traits: { fire: 3, light: 1 } },
+                    { text: "是经历和成长的见证", traits: { dark: 3, ice: 1 } },
+                    { text: "更重要的是心态年轻", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你理想中的睡前时光是？",
+                options: [
+                    { text: "看一会儿书再睡", traits: { light: 3, ice: 1 } },
+                    { text: "规划第二天的事情", traits: { ice: 3, dark: 1 } },
+                    { text: "听音乐或看电影", traits: { fire: 3, light: 1 } },
+                    { text: "反思当天的经历", traits: { dark: 3, ice: 1 } },
+                    { text: "和家人聊聊天", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对权力的看法是？",
+                options: [
+                    { text: "不是最重要的东西", traits: { light: 3, gravity: 1 } },
+                    { text: "可以用来做更多的事", traits: { ice: 3, dark: 1 } },
+                    { text: "不如自由和快乐重要", traits: { fire: 3, light: 1 } },
+                    { text: "是保护自己和他人的手段", traits: { dark: 3, fire: 1 } },
+                    { text: "用来守护家人的工具", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种类型的书？",
+                options: [
+                    { text: "哲学或心灵成长类", traits: { light: 3, ice: 1 } },
+                    { text: "专业或知识类书籍", traits: { ice: 3, dark: 1 } },
+                    { text: "浪漫小说或诗歌", traits: { fire: 3, light: 1 } },
+                    { text: "悬疑或人物传记", traits: { dark: 3, fire: 1 } },
+                    { text: "温馨的家庭故事", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对改变的态度是？",
+                options: [
+                    { text: "接受变化，但保持本心", traits: { light: 3, gravity: 1 } },
+                    { text: "适应变化，做出调整", traits: { ice: 3, dark: 1 } },
+                    { text: "拥抱变化，寻找新体验", traits: { fire: 3, dark: 1 } },
+                    { text: "主动改变，掌控命运", traits: { dark: 3, fire: 1 } },
+                    { text: "只要家人好就好", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你理想中的工作是？",
+                options: [
+                    { text: "能自由安排时间的工作", traits: { light: 3, fire: 1 } },
+                    { text: "专业且有挑战性的工作", traits: { ice: 3, dark: 1 } },
+                    { text: "有创意和自由度的工作", traits: { fire: 3, light: 1 } },
+                    { text: "能证明自己能力的工作", traits: { dark: 3, fire: 1 } },
+                    { text: "能兼顾家庭的工作", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对死亡的看法是？",
+                options: [
+                    { text: "是另一种形式的开始", traits: { light: 3, gravity: 1 } },
+                    { text: "是自然规律，要珍惜现在", traits: { ice: 3, light: 1 } },
+                    { text: "活着就要精彩", traits: { fire: 3, dark: 1 } },
+                    { text: "是每个人都要面对的挑战", traits: { dark: 3, ice: 1 } },
+                    { text: "更重要的是活着的时光", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种味道？",
+                options: [
+                    { text: "清新的茶香", traits: { light: 3, ice: 1 } },
+                    { text: "清爽的薄荷", traits: { ice: 3, light: 1 } },
+                    { text: "甜美的花香", traits: { fire: 3, light: 1 } },
+                    { text: "浓郁的咖啡或酒香", traits: { dark: 3, fire: 1 } },
+                    { text: "温暖的食物香气", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对信任的看法是？",
+                options: [
+                    { text: "一旦信任就全心交付", traits: { light: 3, gravity: 2 } },
+                    { text: "信任需要时间来建立", traits: { ice: 3, dark: 1 } },
+                    { text: "信任是爱情的基础", traits: { fire: 3, light: 1 } },
+                    { text: "不轻易信任，但信任了就不怀疑", traits: { dark: 3, ice: 1 } },
+                    { text: "对家人永远信任", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你理想中的周末夜晚是？",
+                options: [
+                    { text: "看星星或赏月", traits: { light: 3, gravity: 1 } },
+                    { text: "在家工作或学习", traits: { ice: 3, dark: 1 } },
+                    { text: "参加派对或约会", traits: { fire: 3, dark: 1 } },
+                    { text: "去酒吧或探险", traits: { dark: 3, fire: 1 } },
+                    { text: "和家人一起看电视", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对美的定义是？",
+                options: [
+                    { text: "自然和真实的美", traits: { light: 3, gravity: 1 } },
+                    { text: "简约和优雅的美", traits: { ice: 3, light: 1 } },
+                    { text: "浪漫和热烈的美", traits: { fire: 3, dark: 1 } },
+                    { text: "神秘和有力量的美", traits: { dark: 3, fire: 1 } },
+                    { text: "温暖和治愈的美", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对家庭的看法是？",
+                options: [
+                    { text: "是温暖的港湾", traits: { light: 3, gravity: 2 } },
+                    { text: "是责任也是动力", traits: { ice: 3, gravity: 1 } },
+                    { text: "是爱和陪伴的地方", traits: { fire: 3, gravity: 1 } },
+                    { text: "是需要守护的存在", traits: { dark: 3, gravity: 1 } },
+                    { text: "是最重要的东西", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "如果明天是世界末日，你会？",
+                options: [
+                    { text: "和重要的人在一起", traits: { light: 3, gravity: 2 } },
+                    { text: "做完该做的事", traits: { ice: 3, dark: 1 } },
+                    { text: "尽情享受最后的时光", traits: { fire: 3, dark: 1 } },
+                    { text: "想办法改变命运", traits: { dark: 3, fire: 1 } },
+                    { text: "和家人一起度过", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对缘分的看法是？",
+                options: [
+                    { text: "命中注定的相遇", traits: { light: 3, gravity: 1 } },
+                    { text: "缘分也需要努力", traits: { ice: 3, dark: 1 } },
+                    { text: "浪漫的命中注定", traits: { fire: 3, light: 1 } },
+                    { text: "缘分是自己创造的", traits: { dark: 3, fire: 1 } },
+                    { text: "珍惜每一段缘分", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你更喜欢哪种季节？",
+                options: [
+                    { text: "春天 - 万物复苏", traits: { light: 3, gravity: 1 } },
+                    { text: "冬天 - 宁静祥和", traits: { ice: 3, light: 1 } },
+                    { text: "夏天 - 热情奔放", traits: { fire: 3, dark: 1 } },
+                    { text: "秋天 - 深沉神秘", traits: { dark: 3, ice: 1 } },
+                    { text: "都喜欢，各有特色", traits: { gravity: 3, light: 1 } }
+                ]
+            },
+            {
+                text: "你理想中的伴侣是？",
+                options: [
+                    { text: "温柔体贴，默默守护", traits: { light: 3, gravity: 2 } },
+                    { text: "成熟稳重，专业可靠", traits: { ice: 3, dark: 1 } },
+                    { text: "热情浪漫，充满创意", traits: { fire: 3, light: 1 } },
+                    { text: "神秘魅力，势均力敌", traits: { dark: 3, fire: 1 } },
+                    { text: "温柔宠溺，像家人一样", traits: { gravity: 3, light: 2 } }
+                ]
+            },
+            {
+                text: "你对生活的态度是？",
+                options: [
+                    { text: "平淡是福，珍惜当下", traits: { light: 3, gravity: 1 } },
+                    { text: "追求卓越，不断进步", traits: { ice: 3, dark: 1 } },
+                    { text: "享受生活，创造回忆", traits: { fire: 3, light: 1 } },
+                    { text: "挑战自我，突破极限", traits: { dark: 3, fire: 1 } },
+                    { text: "家人幸福，就是一切", traits: { gravity: 3, light: 2 } }
+                ]
+            }
+        ];
+
+        var currentQuestion = 0;
+        var answers = {};
+        var characterScores = {
+            shenXinghui: 0,
+            liShen: 0,
+            qiYu: 0,
+            qinChe: 0,
+            xiaYizhou: 0
+        };
+
+        function startTest() {
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+            currentQuestion = 0;
+            answers = {};
+            characterScores = {
+                shenXinghui: 0,
+                liShen: 0,
+                qiYu: 0,
+                qinChe: 0,
+                xiaYizhou: 0
+            };
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            var question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = '问题 ' + (currentQuestion + 1);
+            document.getElementById('questionText').textContent = question.text;
+            document.getElementById('progressText').textContent = '题目 ' + (currentQuestion + 1) + ' / ' + questions.length;
+            document.getElementById('progressFill').style.width = ((currentQuestion + 1) / questions.length * 100) + '%';
+
+            var optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            var letters = ['A', 'B', 'C', 'D', 'E'];
+
+            question.options.forEach(function(option, index) {
+                var optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (answers[currentQuestion] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                optionDiv.innerHTML = '<div class="option-letter">' + letters[index] + '</div><div>' + option.text + '</div>';
+                optionDiv.onclick = function() {
+                    selectOption(index);
+                };
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? '查看结果' : '下一题';
+        }
+
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            var options = document.querySelectorAll('.option');
+            options.forEach(function(opt, i) {
+                if (i === index) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+            
+            // 自动下一题或显示结果
+            if (currentQuestion < questions.length - 1) {
+                setTimeout(function() {
+                    currentQuestion++;
+                    loadQuestion();
+                }, 500);
+            } else {
+                // 最后一题，自动计算结果
+                setTimeout(function() {
+                    calculateResult();
+                }, 500);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                alert('请先选择一个答案！');
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                calculateResult();
+            }
+        }
+
+        function calculateResult() {
+            // 重置分数
+            characterScores = {
+                shenXinghui: 0,
+                liShen: 0,
+                qiYu: 0,
+                qinChe: 0,
+                xiaYizhou: 0
+            };
+            
+            // 检查是否所有问题都已回答
+            for (var i = 0; i < questions.length; i++) {
+                if (answers[i] === undefined) {
+                    alert('请回答所有问题！');
+                    currentQuestion = i;
+                    loadQuestion();
+                    return;
+                }
+            }
+            
+            // 计算分数
+            for (var i = 0; i < questions.length; i++) {
+                var question = questions[i];
+                var selectedOption = question.options[answers[i]];
+                
+                if (selectedOption.traits.light) {
+                    characterScores.shenXinghui += selectedOption.traits.light;
+                }
+                if (selectedOption.traits.ice) {
+                    characterScores.liShen += selectedOption.traits.ice;
+                }
+                if (selectedOption.traits.fire) {
+                    characterScores.qiYu += selectedOption.traits.fire;
+                }
+                if (selectedOption.traits.dark) {
+                    characterScores.qinChe += selectedOption.traits.dark;
+                }
+                if (selectedOption.traits.gravity) {
+                    characterScores.xiaYizhou += selectedOption.traits.gravity;
+                }
+            }
+
+            var maxScore = 0;
+            var matchedCharacter = '';
+            for (var key in characterScores) {
+                if (characterScores[key] > maxScore) {
+                    maxScore = characterScores[key];
+                    matchedCharacter = key;
+                }
+            }
+
+            showResult(matchedCharacter, maxScore);
+        }
+
+        function showResult(matchedKey, maxScore) {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            document.getElementById('resultScreen').classList.add('active');
+
+            var character = characters[matchedKey];
+            document.getElementById('resultIcon').textContent = character.icon;
+            document.getElementById('matchedCharacter').textContent = character.name;
+            document.getElementById('characterDesc').textContent = character.desc;
+            document.getElementById('characterPersonality').textContent = character.personality;
+            document.getElementById('characterQuote').textContent = character.quote;
+
+            var totalPossible = 150;
+            var percentage = Math.round((maxScore / totalPossible) * 100);
+            document.getElementById('compatibilityText').textContent = '适配度：' + percentage + '%';
+            document.getElementById('compatibilityFill').style.width = percentage + '%';
+
+            var secondaryMatches = document.getElementById('secondaryMatches');
+            secondaryMatches.innerHTML = '';
+
+            var sortedCharacters = Object.keys(characterScores).sort(function(a, b) {
+                return characterScores[b] - characterScores[a];
+            });
+
+            sortedCharacters.forEach(function(key) {
+                var char = characters[key];
+                var score = characterScores[key];
+                var percent = Math.round((score / totalPossible) * 100);
+                
+                var item = document.createElement('div');
+                item.className = 'secondary-item';
+                item.innerHTML = '<span class="secondary-name">' + char.icon + ' ' + char.name + ' - ' + char.coreTag + '</span><span class="secondary-percent">' + percent + '%</span>';
+                secondaryMatches.appendChild(item);
+            });
+        }
+
+        function restartTest() {
+            document.getElementById('resultScreen').classList.remove('active');
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('introScreen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
